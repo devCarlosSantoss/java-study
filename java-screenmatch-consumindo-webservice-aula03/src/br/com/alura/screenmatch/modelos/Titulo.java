@@ -1,10 +1,12 @@
 package br.com.alura.screenmatch.modelos;
 
-
-import br.com.alura.screenmatch.exception.ErroDeConversaoDeAnoException;
+import br.com.alura.screenmatch.excecao.ErroDeConversaoDeAnoException;
+import com.google.gson.annotations.SerializedName;
 
 public class Titulo implements Comparable<Titulo> {
+    @SerializedName("Title")
     private String nome;
+    @SerializedName("Year")
     private int anoDeLancamento;
     private boolean incluidoNoPlano;
     private double somaDasAvaliacoes;
@@ -16,13 +18,15 @@ public class Titulo implements Comparable<Titulo> {
         this.anoDeLancamento = anoDeLancamento;
     }
 
-    public Titulo(TituloOmdb meuTituloOmbd) throws ErroDeConversaoDeAnoException {
-        this.nome = meuTituloOmbd.title();
-        if (meuTituloOmbd.year().length() > 4) {
-            throw new ErroDeConversaoDeAnoException("Erro de conversão.");
-        };
-        this.anoDeLancamento = Integer.valueOf(meuTituloOmbd.year());
-        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmbd.runtime().substring(0, 2));
+    public Titulo(TituloOmdb meuTituloOmdb) {
+        this.nome = meuTituloOmdb.title();
+
+        if(meuTituloOmdb.year().length() > 4) {
+            throw new ErroDeConversaoDeAnoException("Não consegui converter o ano " +
+                    "porque tem mais de 04 caracteres.");
+        }
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        this.duracaoEmMinutos = Integer.valueOf(meuTituloOmdb.runtime().substring(0, 2));
     }
 
     public String getNome() {
@@ -77,20 +81,14 @@ public class Titulo implements Comparable<Titulo> {
 
     @Override
     public int compareTo(Titulo outroTitulo) {
-        return this.nome.compareTo(outroTitulo.getNome());
+        return this.getNome().compareTo(outroTitulo.getNome());
     }
-
-    // Implementação do método toString() personalizado
-//    @Override
-//    public String toString() {
-//        return (this instanceof Serie ? "Série: " : "Filme: ") + this.getNome() + " (" + this.anoDeLancamento + ")";
-//    }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "nome='" + nome + '\'' +
-                ", anoLancamento=" + anoDeLancamento +
-                ", duração=" + duracaoEmMinutos;
-    }
+                ", anoDeLancamento=" + anoDeLancamento + "," +
+                " duração " + duracaoEmMinutos;
 
+    }
 }
