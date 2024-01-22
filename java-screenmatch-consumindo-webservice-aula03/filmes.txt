@@ -1,0 +1,1 @@
+nome='Batman', anoDeLancamento=1989, duração 12!!!
